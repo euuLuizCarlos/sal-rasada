@@ -233,15 +233,23 @@
     // 42 minutos e 45 segundos = 2565 segundos
     const DELAY_IN_SECONDS = 2565;
 
-    // Prova Social Dinâmica
+    // Prova Social Dinâmica (Com limite de segurança realista)
     setInterval(() => {
       const countSpan = document.getElementById('viewerCount');
-      let current = parseInt(countSpan.innerText.replace(',', ''));
-      let change = Math.floor(Math.random() * 7) - 3;
-      countSpan.innerText = (current + change).toLocaleString();
+      let current = parseInt(countSpan.innerText.replace('.', '').replace(',', ''));
+      
+      // Sorteia uma variação pequena entre -3 e +4 pessoas
+      let change = Math.floor(Math.random() * 8) - 3; 
+      let newCount = current + change;
+
+      // Trava de segurança: nunca deixa cair abaixo de 1.410 nem passar de 1.590
+      if (newCount < 1410) newCount = 1425;
+      if (newCount > 1590) newCount = 1575;
+
+      countSpan.innerText = newCount.toLocaleString('es-ES');
     }, 3500);
 
-    // Lógica de Exibição do Botão (Delay + Mémoria do Navegador)
+    // Lógica de Exibição do Botão (Delay + Memória do Navegador)
     function checkCtaDisplay() {
       if (localStorage.getItem('ctaShown') === 'true') {
         document.getElementById('ctaBox').style.display = 'block';
@@ -255,6 +263,3 @@
 
     window.addEventListener('DOMContentLoaded', checkCtaDisplay);
   </script>
-
-</body>
-</html>
